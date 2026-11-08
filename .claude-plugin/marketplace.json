@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ds",
+  "description": "Skill ds: o agente segue o design system documentado no DESIGN.md do projeto.",
+  "owner": {
+    "name": "AioliaTech",
+    "url": "https://github.com/AioliaTech"
+  },
+  "plugins": [
+    {
+      "name": "ds",
+      "description": "Le o DESIGN.md, constroi por blocos, lint parametrizado pelo documento, bootstrap a partir do codigo.",
+      "source": "./",
+      "category": "design"
+    }
+  ]
+}

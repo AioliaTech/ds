@@ -1,0 +1,12 @@
+{
+  "name": "ds",
+  "version": "0.1.0",
+  "description": "Opera um design system documentado: le o DESIGN.md do projeto, monta telas por blocos, para quando falta peca, roda o ds-lint e documenta na mesma entrega. Sem estetica propria: trocar o DESIGN.md troca o visual.",
+  "author": {
+    "name": "AioliaTech",
+    "url": "https://github.com/AioliaTech"
+  },
+  "homepage": "https://github.com/AioliaTech/ds",
+  "repository": "https://github.com/AioliaTech/ds",
+  "keywords": ["design-system", "DESIGN.md", "frontend", "lint", "tokens"]
+}

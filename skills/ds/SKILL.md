@@ -15,9 +15,11 @@ Contrato do documento: [references/contract.md](references/contract.md). Checkli
 
 ## Achar o documento
 
-Suba a partir dos arquivos que vai tocar até achar `DESIGN.md` (monorepo: um por app, ex. `apps/frontend/DESIGN.md`). Leia o frontmatter e as seções **Catálogo**, **Blocos**, **Proibido** e **A decidir** antes de abrir qualquer componente. Fichas de componente (`DESIGN.components.md`, se existir) só a da peça que vai usar.
+Suba a partir dos arquivos que vai tocar até achar `DESIGN.md` (monorepo: um por app, ex. `apps/frontend/DESIGN.md`). Leia o frontmatter e as seções **Catálogo**, **Blocos**, **Receitas** (se houver), **Proibido** e **A decidir** antes de abrir qualquer componente. Fichas de componente (`DESIGN.components.md`, se existir) só a da peça que vai usar.
 
-Não achou nenhum `DESIGN.md` → modo **bootstrap**, antes de qualquer tela.
+Atalho: `node <skill-dir>/scripts/ds-lint.mjs --catalog` imprime catálogo, blocos, receitas e fichas em texto denso; `--search <termo>` responde "tenho peça pra X?" e mostra a ficha. Use antes de ler o documento inteiro.
+
+Não achou nenhum `DESIGN.md` → modo **bootstrap**, antes de qualquer tela. Projeto com documento e sem o bloco da skill no `CLAUDE.md` da app: `--init` grava o bloco; `--doctor` confere documento, catálogo e `CLAUDE.md`.
 
 ## Modos
 
@@ -30,8 +32,9 @@ Não achou nenhum `DESIGN.md` → modo **bootstrap**, antes de qualquer tela.
 
 ## Construir
 
-1. **Pilha de blocos.** Escreva a tela como lista de blocos nomeados da seção Blocos: "Cabeçalho · Assunto ×3 · Tabela de registros · Paginação". Cada bloco aponta pra uma linha do Catálogo.
-2. **Falta peça?** Se um bloco ou controle não está no Catálogo nem nos Blocos: pare antes de codar e diga em uma linha o que falta, a peça mais parecida que existe e o que você faria. Espere a resposta. A exceção é peça de uso único óbvio (um texto, um ícone); aí vai inline com os tokens.
+0. **Quiz.** Antes de abrir qualquer componente, responda a partir do `DESIGN.md`, por escrito e em uma linha cada: (a) qual token é o fundo da área onde a tela vai; (b) qual peça do catálogo confirma uma ação sem volta; (c) pra onde vai um erro pro usuário. Não sabe uma: volte ao documento. Sabe as três: siga.
+1. **Receita ou pilha de blocos.** Se o documento tem Receitas, a tela nova começa por uma receita, nunca do zero. Senão, escreva a tela como lista de blocos nomeados da seção Blocos: "Cabeçalho · Assunto ×3 · Tabela de registros · Paginação". Cada bloco aponta pra uma linha do Catálogo.
+2. **Falta peça?** Se um bloco ou controle não está no Catálogo nem nos Blocos (`--search` confirma): pare antes de codar e diga em uma linha o que falta, a peça mais parecida que existe e o que você faria. Espere a resposta. **Uma pergunta por vez.** A resposta a uma pergunta decide só aquela pergunta: não autoriza o resto, e silêncio, código já existente ou uma decisão antiga também não autorizam nada. A exceção é peça de uso único óbvio (um texto, um ícone); aí vai inline com os tokens.
 3. **Valores só de token.** Cor, fonte, raio e espaço saem do frontmatter como `var(--token)`; número de layout só da escala `spacing`. Valor que está em **A decidir**: pergunte, não escolha.
 4. **Estados vêm junto.** Cada bloco entrega os estados listados na coluna "Estados" da seção Blocos. Sem lista, os seis de [checklist.md](references/checklist.md#estados).
 5. **Texto de estado é o estado real.** Rótulo, pílula e botão refletem o dado depois da ação (aprovado não diz "aguardando").
@@ -68,6 +71,13 @@ Siga [references/bootstrap.md](references/bootstrap.md): tokens do arquivo de te
 | "O catálogo não tem, então crio do meu jeito" | Não tem = parar e perguntar. É a decisão do dono do produto. |
 | "Documento quando a feature fechar" | Documento na mesma entrega ou o próximo agente reconstrói do zero. |
 | "O valor não decidido, escolho um razoável" | Palpite razoável vira produto. A decidir = perguntar. |
+| "Ele aprovou o tema, então posso aplicar no código" | Resposta decide só o que foi perguntado. Mudar código é outra pergunta. |
+| "Já está assim em outro arquivo, então está aprovado" | Código existente não é aprovação; pode ser dívida. O documento e a pessoa aprovam. |
+| "Pergunto tudo de uma vez pra ganhar tempo" | Três perguntas juntas voltam com uma resposta vaga. Uma por vez. |
+
+## Manter a skill
+
+Mudou o `SKILL.md`, o contrato ou o lint? Rode `node scripts/ds-lint.mjs --self-test` e o roteiro de [tests/README.md](../../tests/README.md): os mesmos prompts de sempre, um subagente só com o `DESIGN.md` como referência, um juiz separado com a rubrica por dedução. Regra que o agente ignora não é regra; vira lint ou sai.
 
 ## Com as outras skills
 

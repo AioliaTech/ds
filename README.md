@@ -19,15 +19,19 @@ Ou, sem plugin, copie a pasta `skills/ds` para `~/.claude/skills/ds` (vale para 
 
 - Projeto que ja tem `DESIGN.md` no contrato (ver `skills/ds/references/contract.md`): peca uma tela ou um controle; a skill entra sozinha em qualquer trabalho de front. No `CLAUDE.md` do app, uma linha basta: "Qualquer tela, controle ou estilo: invocar a skill `ds` antes de codar."
 - Projeto sem `DESIGN.md`: a skill roda o modo bootstrap e deriva o documento do codigo real (tokens, componentes exportados, padroes repetidos), sem inventar.
-- Lint a mao:
+- Ferramentas (o caminho da skill vem no cabecalho quando ela e invocada; instalada como plugin fica em `~/.claude/plugins/cache/ds/ds/<versao>/skills/ds`):
 
 ```
-node ~/.claude/skills/ds/scripts/ds-lint.mjs <arquivos ou pastas>      # confere codigo contra o DESIGN.md
-node ~/.claude/skills/ds/scripts/ds-lint.mjs --design DESIGN.md         # confere so o documento
-node ~/.claude/skills/ds/scripts/ds-lint.mjs --self-test
+node <skill>/scripts/ds-lint.mjs --init                    # grava o bloco da skill no CLAUDE.md da app (idempotente)
+node <skill>/scripts/ds-lint.mjs --doctor                  # saude: documento, tokens, catalogo, blocos, fichas, CLAUDE.md
+node <skill>/scripts/ds-lint.mjs --catalog [--json]        # catalogo, blocos, receitas e fichas em texto denso
+node <skill>/scripts/ds-lint.mjs --search <termo> [--json] # "tenho peca pra X?"
+node <skill>/scripts/ds-lint.mjs <arquivos ou pastas>      # lint do codigo contra o DESIGN.md
+node <skill>/scripts/ds-lint.mjs --design DESIGN.md        # confere so o documento
+node <skill>/scripts/ds-lint.mjs --self-test
 ```
 
-(Instalado como plugin, o caminho e o da pasta do plugin; a skill resolve isso sozinha.)
+- Testar a skill (toda mudanca em SKILL.md, contrato ou lint): `tests/README.md`. Prompts fixos que descrevem a experiencia e nao a solucao, subagente so com o DESIGN.md como referencia, juiz separado com rubrica por deducao.
 
 ## O que tem dentro
 

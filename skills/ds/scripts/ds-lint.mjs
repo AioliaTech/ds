@@ -261,10 +261,17 @@ function lintFile(file, ds) {
   const nums = (val) => [...val.matchAll(/(-?\d+(?:\.\d+)?)(px)?(?![\w%.-])/g)].map((m) => Number(m[1]));
   const isDynamic = (val) => /var\(|\$\{|calc\(|auto|inherit|%|em\b|rem\b|vh|vw|\?|&&|\|\|/.test(val);
 
+  let inComment = false; // comentário de bloco aberto numa linha e fechado em outra (JSX {/* ... */})
   lines.forEach((line, idx) => {
-    const code = line.replace(/\/\/.*$/, "").replace(/\/\*.*?\*\//g, "");
+    let code = line;
+    if (inComment) { const end = code.indexOf("*/"); if (end < 0) return; code = code.slice(end + 2); inComment = false; }
+    code = code.replace(/\/\*[\s\S]*?\*\//g, "");
+    const open = code.indexOf("/*"); if (open >= 0) { code = code.slice(0, open); inComment = true; }
+    code = code.replace(/\/\/.*$/, "");
     for (const b of ds.banned) { b.re.lastIndex = 0; if (b.re.test(code)) push(idx, "banned", "error", b.message); }
-    if (/backdrop-?[fF]ilter/.test(code) && !ds.glassOnlyIn.includes(abs) && ds.glassOnlyIn.length)
+    // `backdropFilter: undefined` / `none` tira o vidro, não aplica
+    const glassCode = code.replace(/backdrop-?[fF]ilter\s*:\s*(undefined|none|"none"|'none')/g, "");
+    if (/backdrop-?[fF]ilter/.test(glassCode) && !ds.glassOnlyIn.includes(abs) && ds.glassOnlyIn.length)
       push(idx, "glass-outside", "error", "backdrop-filter fora dos arquivos de vidro: use a classe de vidro do DESIGN.md");
     if (isTokens) return;
     for (const m of code.matchAll(HEX)) {
@@ -394,6 +401,9 @@ Decidimos usar vermelho só na marca.
     '// ds-lint-disable-next-line',
     'const g = { color: "#ABCDEF" };',
     'const h = { padding: "var(--space-2) 12px", margin: `${x}px`, fontFamily: value && mono ? "a" : "b" };',
+    'const i = { ...base, backdropFilter: undefined, WebkitBackdropFilter: undefined };', // tira o vidro: não é glass-outside
+    '{/* comentário aberto que fala de backdrop-filter e de #ABCDEF',
+    '   e fecha só aqui */}',
   ].join("\n"));
   const good = path.join(dir, "src/Good.tsx");
   fs.writeFileSync(good, 'const s = { color: "var(--ink)", padding: 12, borderRadius: "var(--radius-md)", transition: "opacity 150ms", fontFamily: "inherit" };\n');

@@ -47,6 +47,10 @@ Não achou nenhum `DESIGN.md` → modo **bootstrap**, antes de qualquer tela. Pr
 
 Rode o lint e o checklist nos arquivos indicados e devolva uma tabela: `arquivo:linha · regra · o que fazer`, erros primeiro. Dois passos a mais que o lint não vê: cada bloco tem seus estados; cada texto de estado bate com o dado.
 
+## Conferência a cada 10 mensagens
+
+Instalada como plugin, a skill traz um gancho (`hooks/ds-checkin.mjs`): em sessão onde ela foi invocada, a cada 10 mensagens do usuário chega um pedido de conferência. Quando chegar, diga ao usuário em uma linha que começa com `ds:` o que conferiu (peças do catálogo, valor cru, lint nos arquivos tocados, entrega fechada com a verificação) e faça o que faltar antes de seguir. Sem front desde a última, diga isso e siga. O gancho só lembra; quem confere é você, com o lint e o checklist. Em conversa longa o que some primeiro é fechar com a verificação e perguntar uma coisa por vez ([tests/degradation.md](../../tests/degradation.md)).
+
 ## Documentar
 
 Na mesma entrega, no `DESIGN.md`:

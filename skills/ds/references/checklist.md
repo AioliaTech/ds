@@ -24,7 +24,8 @@ E a regra do texto: rótulo, pílula e botão dizem o estado **depois** da açã
 - Nada de `transition: all` nem `will-change: all`: anime só a propriedade que muda.
 - Título com `text-wrap: balance`, parágrafo com `text-wrap: pretty` quando o sistema não tiver outra regra.
 - Área de clique no mínimo a altura de controle do `DESIGN.md`; ícone pequeno ganha padding, não fica menor que isso.
-- Desabilitado não reage ao mouse; se precisa parecer vivo, fica habilitado e explica no clique o que falta.
+- Desabilitado não reage ao mouse; se precisa parecer vivo, fica habilitado e explica no clique o que falta. `disabled` corta o clique, não o hover: regra `:hover` em classe de botão leva `:where(:not(:disabled))` (não soma especificidade) e o cursor volta pra seta. Confira com o script de "No navegador", abaixo.
+- Lista que pode passar de uns 100 itens não desenha tudo de uma vez: desenha um lote e cresce ao rolar, ou pagina. Mil linhas na tela travam a página a cada atualização dos dados.
 - Foco visível em tudo que recebe teclado.
 - Movimento respeita `prefers-reduced-motion` e o desligador do sistema, se houver.
 
@@ -44,3 +45,15 @@ E a regra do texto: rótulo, pílula e botão dizem o estado **depois** da açã
 - Erro diz o que fazer, numa frase.
 - Desligado explica a consequência.
 - Recurso não pronto: "Em breve" + uma frase; nada de controle que não funciona.
+
+## No navegador
+
+O lint lê o código; isto lê a tela. Rode no console em cada tela tocada que tenha controle desabilitado (bloco desligado por um liga/desliga, salvar sem alteração, ponta de paginação). Tem que dar `cursor: 0` e `hover: 0`.
+
+```js
+const H=[],W=rs=>{for(const x of rs){if(x.cssRules&&x.cssRules.length)W(x.cssRules);if(!x.selectorText||!x.selectorText.includes(':hover')||![...x.style].some(p=>p!=='cursor'))continue;const S=x.selectorText.split(/,(?![^()]*\))/).map(s=>s.trim()),L=s=>s.split(/\s+(?![^()]*\))/).pop().includes(':hover'),B=S.filter(s=>!L(s));S.filter(L).forEach(s=>H.push([s.replace(/:hover/g,''),B]))}};for(const s of document.styleSheets){try{W(s.cssRules)}catch{}}
+const m=(e,s)=>{try{return e.matches(s)}catch{return false}},D=[...document.querySelectorAll('button:disabled,input:disabled,select:disabled,textarea:disabled,[aria-disabled="true"]')].filter(e=>e.getClientRects().length);
+({cursor:D.filter(e=>['pointer','grab'].includes(getComputedStyle(e).cursor)).length,hover:D.filter(e=>getComputedStyle(e).pointerEvents!=='none'&&H.some(([t,B])=>m(e,t)&&!B.some(b=>m(e,b)))).length})
+```
+
+`cursor` conta controle desabilitado com mãozinha. `hover` conta controle desabilitado que casa com uma regra `:hover` que mudaria a pintura dele (regra cujo mesmo bloco já vale sem o hover não conta). Ideia dos audits de desabilitado do Astryx; se o `DESIGN.md` do projeto tiver a própria conferência no navegador, este script entra nela.

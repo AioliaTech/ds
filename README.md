@@ -31,7 +31,8 @@ node <skill>/scripts/ds-lint.mjs --design DESIGN.md        # confere so o docume
 node <skill>/scripts/ds-lint.mjs --self-test
 ```
 
-- Testar a skill (toda mudanca em SKILL.md, contrato ou lint): `tests/README.md`. Prompts fixos que descrevem a experiencia e nao a solucao, subagente so com o DESIGN.md como referencia, juiz separado com rubrica por deducao.
+- Conferencia a cada 10 mensagens (so no plugin): em sessao onde a skill foi invocada, a cada 10 mensagens suas o agente recebe um pedido de conferencia e responde uma linha que comeca com `ds:` dizendo o que conferiu (catalogo, valor cru, lint, verificacao final). Sessao que nunca usou a skill nao recebe nada. Desligar: variavel de ambiente `DS_CHECKIN=off`. Depois de instalar ou atualizar, rode `/reload-plugins` ou abra sessao nova.
+- Testar a skill (toda mudanca em SKILL.md, contrato ou lint): `tests/README.md`. Prompts fixos que descrevem a experiencia e nao a solucao, subagente so com o DESIGN.md como referencia, juiz separado com rubrica por deducao. Conversa longa (a regra some na mensagem 20?): `tests/degradation.md`.
 
 ## O que tem dentro
 
@@ -39,7 +40,8 @@ node <skill>/scripts/ds-lint.mjs --self-test
 |---|---|
 | `skills/ds/SKILL.md` | Os modos (construir, revisar, documentar, bootstrap) e as regras de quando parar |
 | `skills/ds/references/contract.md` | O que um `DESIGN.md` precisa ter: frontmatter de tokens + chave `lint`, secoes Catalogo, Blocos, Proibido, A decidir |
-| `skills/ds/references/checklist.md` | Seis estados de conteudo, acabamento, acessibilidade de formulario e modal, texto |
+| `skills/ds/references/checklist.md` | Seis estados de conteudo, acabamento, acessibilidade de formulario e modal, texto, e a conferencia de desabilitado no navegador |
+| `hooks/hooks.json` + `hooks/ds-checkin.mjs` | Gancho do plugin: conta as mensagens do usuario em sessao que usou a skill e pede a conferencia a cada 10 (`--self-test`) |
 | `skills/ds/references/bootstrap.md` | Como criar o `DESIGN.md` a partir do codigo, so com evidencia |
 | `skills/ds/templates/` | Esqueleto de `DESIGN.md` e de ficha de componente |
 | `skills/ds/scripts/ds-lint.mjs` | Lint em Node, zero dependencias: hex/fonte/raio/espaco/duracao crus, backdrop-filter fora do lugar, caminhos do catalogo, proibicoes em regex |

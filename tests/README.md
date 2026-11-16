@@ -26,3 +26,7 @@ Duas rodadas por prompt bastam pra ver se uma falha é padrão. Três subagentes
 ## Condições
 
 Quando quiser medir o efeito da skill e não só a conformidade: rode a mesma bateria em duas condições, **com** a skill e **sem** (só o `DESIGN.md`). O juiz vê as duas sem saber qual é qual. Se a nota não separa, a skill não está fazendo nada que o documento sozinho não faça.
+
+## Conversa longa
+
+A bateria acima é de pedido único. Pra medir se a regra some no meio de uma conversa, use [degradation.md](degradation.md): um subagente só, 21 mensagens, sonda em 0, 10 e 20, um juiz por sonda. Rode quando a mudança mexer no que o agente carrega (`SKILL.md`, regras sempre carregadas do projeto) ou quando a mesma regra for cobrada duas vezes numa sessão.
